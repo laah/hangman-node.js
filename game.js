@@ -8,7 +8,7 @@ function Word(startingWord) {
     this.guesses = [];
 
     this.printInfo = function() {
-        console.log(this.lettersArray);
+        // console.log(this.lettersArray);
     }
     this.storeLetter = function() {
         for (var i = 0; i < startingWord.length; i++) {
@@ -21,46 +21,61 @@ function Word(startingWord) {
 function Letter(singleLetter) {
     this.underscore = '_'
     this.actualLetter = singleLetter
-    // this.guessed = true;
+    this.guessed = false;
 }
-var count = 0;
+var count = 1;
 
-var askForLetter = function() {
+var askForLetter = function(wordGamePlaceholder) {
     if (count < 10) {
 
-        inquirer.prompt([{
-            name: 'guessLetter',
-            type: 'input',
-            message: 'Please enter a letter',
-
-    //     }]).then(function(answers) {
+        inquirer.prompt([
+        	{
+	            name: 'guessLetter',
+	            type: 'input',
+	            message: 'Please enter a letter',
+        	}        	
+        ]).then(function(answers) {
             
-    //     	var doesExist = false;
+        	var doesExist = false;
+        	var stringToPrint = '';
 
-    //        // reorganize to be able to access in word
-    //        // if guess was already made show message
-    //     	if(guesses.indexOf(answers.guessLetter) > -1){
-    //     		console.log("you've already guessed that!");
-    //     		doesExist = true;
 
-    //     	// if guess is correct, show letter in word, store letter in guesses array
-    //     	}else if {
-	   //               (gameWord.lettersArray.guessLetter === true) 
-	   //           }
-	   //               {
-	   //                stringToPrint += gameWord.lettersArray[i].actualLetter	
+        	// console.log('this is what the user guessed ---', answers.guessLetter);
 
-	   //      // if letter is incorrect, store letter in guess array, increase count by 1, prompt to guess again
-    //     	} else (gameWord.lettersArray[i].guessLetter === false){
-	   //                  stringToPrint += ' _ '
-	   //              };
-    //     }
-    //     // end of answers function
-    // })
-//     // end of if count
-// };
+        	for (var i = 0; i < wordGamePlaceholder.lettersArray.length; i ++) {
+        		// console.log('this is each letter', wordGamePlaceholder.lettersArray[i].actualLetter)
+        		if (wordGamePlaceholder.lettersArray[i].actualLetter === answers.guessLetter) {
+        			console.log('Correct guess!');
+        			wordGamePlaceholder.lettersArray[i].guessed = true;
+
+        		}
+
+        	}
+
+        	for (var i = 0; i < wordGamePlaceholder.lettersArray.length; i ++) {
+        		if (wordGamePlaceholder.lettersArray[i].guessed === true) {
+        			stringToPrint += wordGamePlaceholder.lettersArray[i].actualLetter
+        		} else {
+        			stringToPrint += ' _ '
+        		}
+        	}
+
+
+        	// code for checking if game is done!!!
+
+        
+
+
+        	console.log('Guess again! You\'ve used ' + count +' of your 10 guesses!', stringToPrint);
+        	count++
+			askForLetter(wordGamePlaceholder)
+           
+    	})
+    }
+    // end of if count
+};
 // end of askForLetter function
-// askForLetter();
+
 
 function chooseRandomWord() {
 
@@ -69,10 +84,12 @@ function chooseRandomWord() {
     var startingWord = possibleWord[randomizer];
 
     var gameWord = new Word(startingWord);
-    gameWord.printInfo();
+    // gameWord.printInfo();
     gameWord.storeLetter();
     gameWord.printInfo();
-    var stringToPrint = ''
+
+    askForLetter(gameWord);
+
 };
 chooseRandomWord();
 
